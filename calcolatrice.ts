@@ -99,6 +99,7 @@ let my_calc : Calcolatrice = {
 let resutl :number
 
 console.log("--------------START")
+
 console.log(" ")
 resutl =  my_calc.add(1,1)
 console.log("Result:" + resutl)
@@ -124,5 +125,7 @@ resutl =  my_calc.neg(7)
 console.log("Result:" + resutl)
 my_calc.printHistory()
 
+
+console.log("--------------END")
 
 console.log("--------------END")
