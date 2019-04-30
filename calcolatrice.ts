@@ -99,7 +99,10 @@ let my_calc : Calcolatrice = {
 let resutl :number
 
 console.log("--------------START")
+<<<<<<< HEAD
 
+=======
+>>>>>>> My_First_Branch
 console.log(" ")
 resutl =  my_calc.add(1,1)
 console.log("Result:" + resutl)
@@ -126,6 +129,9 @@ console.log("Result:" + resutl)
 my_calc.printHistory()
 
 
+<<<<<<< HEAD
 console.log("--------------END")
 
+=======
+>>>>>>> My_First_Branch
 console.log("--------------END")
