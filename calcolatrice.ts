@@ -1,15 +1,15 @@
 
 
 
-type CalcolatricWithMemory = {
+type MemoryStorage = {
     memorizzaOperazione : string
     memorizza_n1:number
     memorizza_n2:number
     historyOperazione : string[]
-    printHistory:(this:CalcolatricWithMemory) => void
+    printHistory:(this:MemoryStorage) => void
 } 
 
-type Calcolatrice =  CalcolatricWithMemory & {
+type Calcolatrice =  MemoryStorage & {
     add:(this:Calcolatrice,n1:number, n2:number) => number
     div:(this:Calcolatrice,n1:number, n2:number) => number
     sub:(this:Calcolatrice,n1:number, n2:number) => number
@@ -99,10 +99,7 @@ let my_calc : Calcolatrice = {
 let resutl :number
 
 console.log("--------------START")
-<<<<<<< HEAD
 
-=======
->>>>>>> My_First_Branch
 console.log(" ")
 resutl =  my_calc.add(1,1)
 console.log("Result:" + resutl)
@@ -129,9 +126,6 @@ console.log("Result:" + resutl)
 my_calc.printHistory()
 
 
-<<<<<<< HEAD
 console.log("--------------END")
 
-=======
->>>>>>> My_First_Branch
 console.log("--------------END")
