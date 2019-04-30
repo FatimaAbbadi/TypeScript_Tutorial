@@ -57,6 +57,8 @@ var my_calc = {
     printHistory: print_History
 };
 var resutl;
+console.log("--------------START");
+console.log(" ");
 resutl = my_calc.add(1, 1);
 console.log("Result:" + resutl);
 my_calc.printHistory();
@@ -75,3 +77,5 @@ my_calc.printHistory();
 resutl = my_calc.neg(7);
 console.log("Result:" + resutl);
 my_calc.printHistory();
+console.log("--------------END");
+console.log("--------------END");
