@@ -1,6 +1,5 @@
 
 
-
 type MemoryStorage = {
     memorizzaOperazione : string
     memorizza_n1:number
@@ -9,7 +8,7 @@ type MemoryStorage = {
     printHistory:(this:MemoryStorage) => void
 } 
 
-type Calcolatrice =  MemoryStorage & {
+type Calcolatrice =  MemoryStorage  & {
     add:(this:Calcolatrice,n1:number, n2:number) => number
     div:(this:Calcolatrice,n1:number, n2:number) => number
     sub:(this:Calcolatrice,n1:number, n2:number) => number
@@ -34,7 +33,6 @@ function print_History(this:Calcolatrice):void{
         console.log("HISTORY --------> " +this.historyOperazione)
     }
 }
-
 
 
 function myAdd(this:Calcolatrice, n1:number,n2:number):number{
@@ -93,13 +91,14 @@ let my_calc : Calcolatrice = {
     memorizza_n1: 0,
     memorizza_n2: 0,
     historyOperazione:[],
-    printHistory:print_History
+    printHistory:print_History,
+
 }
 
 let resutl :number
 
 
-console.log(" ")
+console.log(" -ONE WAY ")
 resutl =  my_calc.add(1,1)
 console.log("Result:" + resutl)
 my_calc.printHistory()
@@ -124,3 +123,4 @@ resutl =  my_calc.neg(7)
 console.log("Result:" + resutl)
 my_calc.printHistory()
 
+console.log(" -- ")
