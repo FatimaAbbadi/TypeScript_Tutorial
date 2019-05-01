@@ -11,11 +11,11 @@ type Pair<t1, t2> = {
 }
 
 type Calcolatrice =  MemoryStorage  & {
-  add:(this:Calcolatrice,n1:number, n2:number) => Pair<number, Calcolatrice>
-  div:(this:Calcolatrice,n1:number, n2:number) => Pair<number, Calcolatrice>
-  sub:(this:Calcolatrice,n1:number, n2:number) => Pair<number, Calcolatrice>
-  mul:(this:Calcolatrice,n1:number, n2:number) => Pair<number, Calcolatrice>
-  neg:(this:Calcolatrice,n1:number) => Pair<number, Calcolatrice>
+  add:(this:Calcolatrice, n1:number, n2:number) => Pair<number, Calcolatrice>
+  div:(this:Calcolatrice, n1:number, n2:number) => Pair<number, Calcolatrice>
+  sub:(this:Calcolatrice, n1:number, n2:number) => Pair<number, Calcolatrice>
+  mul:(this:Calcolatrice, n1:number, n2:number) => Pair<number, Calcolatrice>
+  neg:(this:Calcolatrice, n1:number) => Pair<number, Calcolatrice>
 
 } 
 
@@ -28,58 +28,28 @@ function print_History(this:Calcolatrice):void{
 }
 
 
-function myAdd(this:Calcolatrice, n1:number,n2:number):Pair<number, Calcolatrice>{
-  return {fst : n1+n2, 
-          snd : {...this, 
-                    historyOperazione : this.historyOperazione.concat([{
-                                                                        n1 : n1,
-                                                                        n2 : n2,
-                                                                        operazione : "+"
-                                                                        }])}}
-}
 
-function mySub(this:Calcolatrice,n1:number,n2:number):Pair<number, Calcolatrice>{
-  return {fst : n1-n2, 
-          snd : {...this, 
-                    historyOperazione : this.historyOperazione.concat([{
-                                                                        n1 : n1,
-                                                                        n2 : n2,
-                                                                        operazione : "-"
-                                                                        }])}}
-}
-function myDiv(this:Calcolatrice,n1:number,n2:number):Pair<number, Calcolatrice>{
-  return {fst : n1/n2, 
-          snd : {...this, 
-                    historyOperazione : this.historyOperazione.concat([{
-                                                                        n1 : n1,
-                                                                        n2 : n2,
-                                                                        operazione : "/"
-                                                                        }])}}
-}
-function myMul(this:Calcolatrice,n1:number,n2:number):Pair<number, Calcolatrice>{
-  return {fst : n1*n2, 
-          snd : {...this, 
-                    historyOperazione : this.historyOperazione.concat([{
-                                                                        n1 : n1,
-                                                                        n2 : n2,
-                                                                        operazione : "*"
-                                                                        }])}}
-}
-function myNeg(this:Calcolatrice,n1:number):Pair<number, Calcolatrice>{
-  return {fst : n1*-1, 
-          snd : {...this, 
-                    historyOperazione : this.historyOperazione.concat([{
-                                                                        n1 : n1,
-                                                                        operazione : "*-1"
-                                                                        }])}}
+function myOperation 
+  (the_operation:(n1:number, n2?:number) => number,
+   symbol:string){
+  return function (this:Calcolatrice, n1:number,n2?:number): Pair<number, Calcolatrice> {
+    return {fst : the_operation(n1,n2), 
+            snd : {...this, 
+                historyOperazione : this.historyOperazione.concat([{
+                                                                    n1 : n1,
+                                                                    n2 : n2,
+                                                                    operazione : symbol
+                                                                    }])}}
+          
+  }
 }
 
 let my_calc : Calcolatrice = {
-  add:myOperation((n1, n2) => n1 + n2, "+"),     
-  sub:mySub, 
-  div:myDiv,    
-  mul:myMul,    
-  neg:myNeg,
+  add:myOperation((x, y) => x + y, "+"),     
+  sub:myOperation((x, y) => x - y, "-"), 
+  div:myOperation((x, y) => x / y, "/"),  
+  mul:myOperation((x, y) => x * y, "*"),   
+  neg:myOperation((x) => x * -1, "*-1"),
   historyOperazione:[],
   printHistory:print_History,
 }

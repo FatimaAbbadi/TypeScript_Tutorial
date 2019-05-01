@@ -15,51 +15,22 @@ function print_History() {
         console.log(op.n1 + " " + op.operazione + " " + (op.n2 != undefined ? op.n2 : "") + "\n");
     });
 }
-function myAdd(n1, n2) {
-    return { fst: n1 + n2,
-        snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
-                    n1: n1,
-                    n2: n2,
-                    operazione: "+"
-                }]) }) };
-}
-function mySub(n1, n2) {
-    return { fst: n1 - n2,
-        snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
-                    n1: n1,
-                    n2: n2,
-                    operazione: "-"
-                }]) }) };
-}
-function myDiv(n1, n2) {
-    return { fst: n1 / n2,
-        snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
-                    n1: n1,
-                    n2: n2,
-                    operazione: "/"
-                }]) }) };
-}
-function myMul(n1, n2) {
-    return { fst: n1 * n2,
-        snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
-                    n1: n1,
-                    n2: n2,
-                    operazione: "*"
-                }]) }) };
-}
-function myNeg(n1) {
-    return { fst: n1 * -1,
-        snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
-                    n1: n1,
-                    operazione: "*-1"
-                }]) }) };
+function myOperation(the_operation, symbol) {
+    return function (n1, n2) {
+        return { fst: the_operation(n1, n2),
+            snd: __assign({}, this, { historyOperazione: this.historyOperazione.concat([{
+                        n1: n1,
+                        n2: n2,
+                        operazione: symbol
+                    }]) }) };
+    };
 }
 var my_calc = {
-    add: myOperation(function (n1, n2) { return n1 + n2; }, "+"),
-    sub: mySub,
-    div: myDiv,
-    mul: myMul,
-    neg: myNeg,
+    add: myOperation(function (x, y) { return x + y; }, "+"),
+    sub: myOperation(function (x, y) { return x - y; }, "-"),
+    div: myOperation(function (x, y) { return x / y; }, "/"),
+    mul: myOperation(function (x, y) { return x * y; }, "*"),
+    neg: myOperation(function (x) { return x * -1; }, "*-1"),
     historyOperazione: [],
     printHistory: print_History
 };
@@ -99,12 +70,11 @@ var neg = mul_c(-1);
 //             generic_operation((n1,n2) => n1 + n2, x, y)
 // let mul1 = (x:number, y:number) => 
 //             generic_operation((n1,n2) => n1 * n2, x, y)
-var generic_operation = function (the_operation, n1, n2) {
-    return the_operation(n1, n2);
-};
-var sum1 = function (x, y) {
-    return generic_operation(function (n1, n2) { return n1 + n2; }, x, y);
-};
-var mul1 = function (x, y) {
-    return generic_operation(function (n1, n2) { return n1 * n2; }, x, y);
-};
+var generic_operation = function (the_operation) {
+    return function (n1, n2) {
+        return the_operation(n1, n2);
+    };
+}; //  O)
+//        (number, number) => number
+var sum1 = generic_operation(function (n1, n2) { return n1 + n2; });
+var mul1 = generic_operation(function (n1, n2) { return n1 * n2; });
