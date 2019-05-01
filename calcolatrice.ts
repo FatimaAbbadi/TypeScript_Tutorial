@@ -75,7 +75,7 @@ function myNeg(this:Calcolatrice,n1:number):Pair<number, Calcolatrice>{
 }
 
 let my_calc : Calcolatrice = {
-  add:myAdd,     
+  add:myOperation((n1, n2) => n1 + n2, "+"),     
   sub:mySub, 
   div:myDiv,    
   mul:myMul,    
@@ -118,3 +118,36 @@ my_calc= resutl.snd
 my_calc.printHistory()
 
 console.log(" -- ")
+
+
+
+let sum = (x:number, y:number):number => x + y
+let sum_c = (x:number) => (y:number) :number => x + y
+let mul_c = (x:number) => (y:number) :number => x * y
+
+let inc = sum_c(1)
+let neg = mul_c(-1)
+
+
+// let generic_operation = (the_operation: (n1:number, n2:number) => number,
+//            n1:number, 
+//            n2:number):number => 
+//            the_operation(n1,n2)
+
+// let sum1 = (x:number, y:number) => 
+//             generic_operation((n1,n2) => n1 + n2, x, y)
+               
+// let mul1 = (x:number, y:number) => 
+//             generic_operation((n1,n2) => n1 * n2, x, y)
+                        
+
+let generic_operation = 
+        (the_operation: (n1:number, n2:number) => number) => //I
+          (n1:number, n2:number) : number =>                //O ( I
+          the_operation(n1,n2)                                //  O)
+
+ //        (number, number) => number
+let sum1 = generic_operation ((n1,n2) => n1 + n2)
+               
+let mul1 = generic_operation ((n1,n2) => n1 * n2)
+                        

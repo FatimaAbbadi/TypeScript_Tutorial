@@ -55,7 +55,7 @@ function myNeg(n1) {
                 }]) }) };
 }
 var my_calc = {
-    add: myAdd,
+    add: myOperation(function (n1, n2) { return n1 + n2; }, "+"),
     sub: mySub,
     div: myDiv,
     mul: myMul,
@@ -86,3 +86,25 @@ console.log("Result:" + resutl.fst);
 my_calc = resutl.snd;
 my_calc.printHistory();
 console.log(" -- ");
+var sum = function (x, y) { return x + y; };
+var sum_c = function (x) { return function (y) { return x + y; }; };
+var mul_c = function (x) { return function (y) { return x * y; }; };
+var inc = sum_c(1);
+var neg = mul_c(-1);
+// let generic_operation = (the_operation: (n1:number, n2:number) => number,
+//            n1:number, 
+//            n2:number):number => 
+//            the_operation(n1,n2)
+// let sum1 = (x:number, y:number) => 
+//             generic_operation((n1,n2) => n1 + n2, x, y)
+// let mul1 = (x:number, y:number) => 
+//             generic_operation((n1,n2) => n1 * n2, x, y)
+var generic_operation = function (the_operation, n1, n2) {
+    return the_operation(n1, n2);
+};
+var sum1 = function (x, y) {
+    return generic_operation(function (n1, n2) { return n1 + n2; }, x, y);
+};
+var mul1 = function (x, y) {
+    return generic_operation(function (n1, n2) { return n1 * n2; }, x, y);
+};
