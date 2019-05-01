@@ -121,3 +121,24 @@ let sum1 = generic_operation ((n1,n2) => n1 + n2)
                
 let mul1 = generic_operation ((n1,n2) => n1 * n2)
                         
+/*
+ Student 1 -> 1 Libretto
+ Student N -> N Course
+ Student N -> 1 School 
+ Course N -> 1 School 
+ Teacher N -> 1 School 
+ Teacher 1 -> N Course
+ Maronato N -> 1 School
+
+ assignGrade (teacher)
+ enrollToCourse (student)
+ assignToCourse (maronato)
+ leaveACrouse (student)
+ historyEsami (student)
+ doExam (student)
+ changeDescriptionOfACourse (teacher)
+ ...
+
+  ask Nikos for feedback
+
+*/
