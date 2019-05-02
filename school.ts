@@ -8,20 +8,16 @@
  Teacher 1 -> N Course
  Maronato N -> 1 School
 
- assignGrade (teacher)
- registerToCourse (student)
- leaveACrouse (student)
- printGradeList (student)
+ assignGrade (teacher) X
+ registerToCourse (student)X
+ leaveACrouse (student) X
+ printGradeList (student)X
  changeTitleOfACourse (teacher)
  ...
 
   ask Nikos for feedback
 
 */
-//type Course
-/* let courseList : string[]= ["Maths I","Maths II","Web Development", "Database Administration", "Digital Management","Computer Networking"]
-console.log(coursesName)
- */
 
 type School = {
     school_name: string
@@ -30,7 +26,7 @@ type School = {
 
     students:Student[]
     teachers:Teacher[]
-    //courses:Course[]
+    courses:Course[]
 }
 
 type Person = {
@@ -46,59 +42,106 @@ type Student = Person &
 
 type Teacher = Person & {kind:"teacher"} & TeachersOperations
 
+type Course = {courseList:string[]}
+
+type Pair1<t1, t2> = {
+    fst:t1
+    snd:t2
+  }
+
+type Pair2<t1, t2> = {
+    fst:t1
+    snd:t2
+}
+
+let courseList = ["Maths I","Maths II","Web Development", "Database Administration", "Digital Management","Computer Networking"]
 
 type StudentsOperations = {
     //courseListHistory:{courseName:string}[]
     printCourseList:(this:Student) => void
-    registerToCourse:(this:Student, courseName:string) => Student
-  //  removeCourse:(this:StudentsOperations, courseName:string) => string
+    registerToCourse:(this:Student, courseName:string, school:School) => Pair2<boolean, Student>
+    removeCourse:(this:Student, courseName:string, school:School) => Pair2<boolean, Student>
 }
 
 
 type TeachersOperations = {
     /* changeDescriptionOfACourse:(profile:TeacherOperations,courses:string[]) => [], */
-    assignGrade:(this:Teacher,student:Student ,courseName:string,grade:number) => Student
+    printGradeList:(student:Student) => void
+    assignGrade:(this:Teacher,student:Student ,courseName:string,grade:number) => Pair1<boolean, Student>
 }
 
-
-function assign_Grade(this:Teacher,student:Student,courseName:string,grade:number) : Student {
-    //gradeList: student.gradeList.concat(`COURSE NAME : ${courseName} - GRADE: ${grade}`),
-    // console.log(`Student ID: ${student.student_id} \n COURSE NAME : ${courseName} - GRADE: ${grade}`)
-
-    return {
-        ...student,
-        gradeList: student.gradeList.concat([`COURSE NAME : ${courseName} - GRADE: ${grade}`]),
+function assign_Grade(this:Teacher,student:Student,courseName:string,grade:number) : Pair1<boolean, Student> {
+    if (student.courseList.indexOf(courseName) > -1){
+        return {
+            fst:true,
+            snd: {...student,
+                gradeList : student.gradeList.concat([`COURSE NAME : ${courseName} - GRADE: ${grade}`]),}}
     }
+    else
+        return {
+            fst:false,
+            snd: {...student,}}
 }
 
-function add_Course(this:Student, courseName:string, school:School) : Student {
-    //courseList : this.courseList.concat(courseName),
-    //console.log(`Course ${courseName} added to student ${this.student_id} - ${this.name} ${this.surname}`)
-//if course is in school then ok
-    return {
-        ...this,
-        courseList : this.courseList.concat([courseName]),
+function register_ToCourse(this:Student, courseName:string, school:School) : Pair2<boolean, Student> {
+    if (courseList.indexOf(courseName) > -1){
+        return {
+            fst:true,
+            snd: {...this,
+                courseList : this.courseList.concat([courseName]),}}
     }
+    else
+        return {
+            fst:false,
+            snd: {...this,}}
 }
 
+function remove_FromCourse(this:Student, courseName:string, school:School) : Pair2<boolean, Student> {
+    if (courseList.indexOf(courseName) > -1){
+        const index = courseList.indexOf(courseName)
+        console.log(courseName +  " " + index + " ------- " + this.courseList)
+        return {
+            fst:true,
+            snd: {...this,
+                courseList : this.courseList.splice(index ,1),}}
+    }
+    else
+        return {
+            fst:false,
+            snd: {...this,}}
+}
 
 function print_CourseList(this:Student):void{
-    console.log("_________CA' FOSCARI UNIVERSITY____________")
-    
+    console.log(`_________CA' FOSCARI UNIVERSITY____________\n\nSTUDENT : ${this.name} ${this.surname}\n__________________COURSE LIST______________`)
+  
     this.courseList.forEach(function(value) {
         console.log(`${value} \n`)
     });
   }
 
-  function print_MarksList(this:Student):void{
-    console.log("_________CA' FOSCARI UNIVERSITY____________")
-    
-    this.courseList.forEach(function(value) {
+  function print_GradeList(student:Student):void{
+    console.log(`__________________GRADE LIST______________`)
+  
+    student.gradeList.forEach(function(value) {
         console.log(`${value} \n`)
     });
   }
 
-  let student1 : Student = {
+
+let checkResultTeacher  : Pair1<boolean, Student>
+let checkResultStudent  : Pair2<boolean, Student>
+
+
+let school1 : School = {
+    school_name: "Ca' Foscari School",
+    address: "Via Piave 27 - Venizia",
+    phone: 12345,
+    courses: [],
+    students:[],
+    teachers:[]
+}
+
+let student1 : Student = {
     kind:"student", 
     student_id:12345,
     bsn:"ASD123",
@@ -107,10 +150,12 @@ function print_CourseList(this:Student):void{
     age:19,
     courseList:[],
     gradeList:[],
-    registerToCourse:add_Course,
-    printCourseList: print_CourseList
+    printCourseList: print_CourseList,
+    registerToCourse:register_ToCourse,
+    removeCourse:remove_FromCourse
   }
 
+  
 
 let teacher1 : Teacher = {
     kind:"teacher",
@@ -118,19 +163,50 @@ let teacher1 : Teacher = {
     name:"Paolo",
     surname:"Cortesi",
     age:45,
-    assignGrade: assign_Grade
+    assignGrade: assign_Grade,
+    printGradeList:print_GradeList
 }
 
 
+//
 
-console.log(student1.name)
+checkResultStudent = student1.registerToCourse("Maths I",school1)
+console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Registered to corse Maths I" : "Course NOT available in ${school1.school_name}" }\n`)
+student1 = checkResultStudent.snd
 
-student1= student1.registerToCourse("Maths I")
-student1= student1.registerToCourse("Maths II")
+
+
+checkResultStudent= student1.registerToCourse("Web Development",school1)
+console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Registered to corse Web Development" : "Course NOT available in ${school1.school_name}" }\n`)
+student1 = checkResultStudent.snd
+
+
+checkResultStudent= student1.registerToCourse("Maths II",school1)
+console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Registered to corse Maths II" : "Course NOT available in ${school1.school_name}" }\n`)
+student1 = checkResultStudent.snd
+
+checkResultStudent= student1.registerToCourse("Maths III",school1)
+console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Registered to corse Maths III" : "Course NOT available in our school" }\n`)
+student1 = checkResultStudent.snd
+
+checkResultStudent= student1.removeCourse("Maths I",school1)
+console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Corse Maths I REMOVED" : "Course NOT available in ${school1.school_name}" }\n`)
+student1 = checkResultStudent.snd   
 
 student1.printCourseList()
-student1 = teacher1.assignGrade(student1, "Math I", 10)
 
-console.log(JSON.stringify(student1)) 
+checkResultTeacher = teacher1.assignGrade(student1, "Maths I", 50)
+
+console.log(` ${checkResultTeacher.fst ? "EXAM REGISTERED" : "EXAM NOT REGISTERED" }\n`)
+
+student1 = checkResultTeacher.snd 
+
+
+teacher1.printGradeList(student1) 
+
+
+
+
+//console.log(JSON.stringify(student1)) 
 
 

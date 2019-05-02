@@ -7,20 +7,16 @@
  Teacher 1 -> N Course
  Maronato N -> 1 School
 
- assignGrade (teacher)
- registerToCourse (student)
- leaveACrouse (student)
- printGradeList (student)
+ assignGrade (teacher) X
+ registerToCourse (student)X
+ leaveACrouse (student) X
+ printGradeList (student)X
  changeTitleOfACourse (teacher)
  ...
 
   ask Nikos for feedback
 
 */
-//type Course
-/* let courseList : string[]= ["Maths I","Maths II","Web Development", "Database Administration", "Digital Management","Computer Networking"]
-console.log(coursesName)
- */
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -32,29 +28,70 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var courseList = ["Maths I", "Maths II", "Web Development", "Database Administration", "Digital Management", "Computer Networking"];
 function assign_Grade(student, courseName, grade) {
-    //gradeList: student.gradeList.concat(`COURSE NAME : ${courseName} - GRADE: ${grade}`),
-    // console.log(`Student ID: ${student.student_id} \n COURSE NAME : ${courseName} - GRADE: ${grade}`)
-    return __assign({}, student, { gradeList: student.gradeList.concat(["COURSE NAME : " + courseName + " - GRADE: " + grade]) });
+    if (student.courseList.indexOf(courseName) > -1) {
+        return {
+            fst: true,
+            snd: __assign({}, student, { gradeList: student.gradeList.concat(["COURSE NAME : " + courseName + " - GRADE: " + grade]) })
+        };
+    }
+    else
+        return {
+            fst: false,
+            snd: __assign({}, student)
+        };
 }
-function add_Course(courseName, school) {
-    //courseList : this.courseList.concat(courseName),
-    //console.log(`Course ${courseName} added to student ${this.student_id} - ${this.name} ${this.surname}`)
-    //if course is in school then ok
-    return __assign({}, this, { courseList: this.courseList.concat([courseName]) });
+function register_ToCourse(courseName, school) {
+    if (courseList.indexOf(courseName) > -1) {
+        return {
+            fst: true,
+            snd: __assign({}, this, { courseList: this.courseList.concat([courseName]) })
+        };
+    }
+    else
+        return {
+            fst: false,
+            snd: __assign({}, this)
+        };
+}
+function remove_FromCourse(courseName, school) {
+    if (courseList.indexOf(courseName) > -1) {
+        var index = courseList.indexOf(courseName);
+        console.log(courseName + " " + index + " ------- " + this.courseList);
+        return {
+            fst: true,
+            snd: __assign({}, this, { courseList: this.courseList.splice(index, 1) })
+        };
+    }
+    else
+        return {
+            fst: false,
+            snd: __assign({}, this)
+        };
 }
 function print_CourseList() {
-    console.log("_________CA' FOSCARI UNIVERSITY____________");
+    console.log("_________CA' FOSCARI UNIVERSITY____________\n\nSTUDENT : " + this.name + " " + this.surname + "\n__________________COURSE LIST______________");
     this.courseList.forEach(function (value) {
         console.log(value + " \n");
     });
 }
-function print_MarksList() {
-    console.log("_________CA' FOSCARI UNIVERSITY____________");
-    this.courseList.forEach(function (value) {
+function print_GradeList(student) {
+    console.log("__________________GRADE LIST______________");
+    student.gradeList.forEach(function (value) {
         console.log(value + " \n");
     });
 }
+var checkResultTeacher;
+var checkResultStudent;
+var school1 = {
+    school_name: "Ca' Foscari School",
+    address: "Via Piave 27 - Venizia",
+    phone: 12345,
+    courses: [],
+    students: [],
+    teachers: []
+};
 var student1 = {
     kind: "student",
     student_id: 12345,
@@ -64,8 +101,9 @@ var student1 = {
     age: 19,
     courseList: [],
     gradeList: [],
-    registerToCourse: add_Course,
-    printCourseList: print_CourseList
+    printCourseList: print_CourseList,
+    registerToCourse: register_ToCourse,
+    removeCourse: remove_FromCourse
 };
 var teacher1 = {
     kind: "teacher",
@@ -73,11 +111,28 @@ var teacher1 = {
     name: "Paolo",
     surname: "Cortesi",
     age: 45,
-    assignGrade: assign_Grade
+    assignGrade: assign_Grade,
+    printGradeList: print_GradeList
 };
-console.log(student1.name);
-student1 = student1.registerToCourse("Maths I");
-student1 = student1.registerToCourse("Maths II");
+//
+checkResultStudent = student1.registerToCourse("Maths I", school1);
+console.log("Name:" + student1.name + " ID:" + student1.student_id + " " + (checkResultStudent.fst ? "Registered to corse Maths I" : "Course NOT available in ${school1.school_name}") + "\n");
+student1 = checkResultStudent.snd;
+checkResultStudent = student1.registerToCourse("Web Development", school1);
+console.log("Name:" + student1.name + " ID:" + student1.student_id + " " + (checkResultStudent.fst ? "Registered to corse Web Development" : "Course NOT available in ${school1.school_name}") + "\n");
+student1 = checkResultStudent.snd;
+checkResultStudent = student1.registerToCourse("Maths II", school1);
+console.log("Name:" + student1.name + " ID:" + student1.student_id + " " + (checkResultStudent.fst ? "Registered to corse Maths II" : "Course NOT available in ${school1.school_name}") + "\n");
+student1 = checkResultStudent.snd;
+checkResultStudent = student1.registerToCourse("Maths III", school1);
+console.log("Name:" + student1.name + " ID:" + student1.student_id + " " + (checkResultStudent.fst ? "Registered to corse Maths III" : "Course NOT available in our school") + "\n");
+student1 = checkResultStudent.snd;
+checkResultStudent = student1.removeCourse("Maths I", school1);
+console.log("Name:" + student1.name + " ID:" + student1.student_id + " " + (checkResultStudent.fst ? "Corse Maths I REMOVED" : "Course NOT available in ${school1.school_name}") + "\n");
+student1 = checkResultStudent.snd;
 student1.printCourseList();
-student1 = teacher1.assignGrade(student1, "Math I", 10);
-console.log(JSON.stringify(student1));
+checkResultTeacher = teacher1.assignGrade(student1, "Maths I", 50);
+console.log(" " + (checkResultTeacher.fst ? "EXAM REGISTERED" : "EXAM NOT REGISTERED") + "\n");
+student1 = checkResultTeacher.snd;
+teacher1.printGradeList(student1);
+//console.log(JSON.stringify(student1)) 
