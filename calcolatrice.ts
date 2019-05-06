@@ -5,7 +5,7 @@ type MemoryStorage = {
   printHistory:(this:MemoryStorage) => void
 }
 
-type Pair<t1, t2> = {
+export type Pair<t1, t2> = {
   fst:t1
   snd:t2
 }
@@ -51,7 +51,7 @@ let my_calc : Calcolatrice = {
   mul:myOperation((x, y) => x * y, "*"),   
   neg:myOperation((x) => x * -1, "*-1"),
   historyOperazione:[],
-  printHistory:print_History,
+  printHistory:print_History
 }
 
 let resutl : Pair<number, Calcolatrice>

@@ -1,22 +1,4 @@
-/*
- Student 1 -> 1 Libretto
- Student N -> N Course
- Student N -> 1 School
- Course N -> 1 School
- Teacher N -> 1 School
- Teacher 1 -> N Course
- Maronato N -> 1 School
-
- assignGrade (teacher) X
- registerToCourse (student)X
- leaveACrouse (student) X
- printGradeList (student)X
- changeTitleOfACourse (teacher)
- ...
-
-  ask Nikos for feedback
-
-*/
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -28,7 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+exports.__esModule = true;
 var courseList = ["Maths I", "Maths II", "Web Development", "Database Administration", "Digital Management", "Computer Networking"];
+function change_TitleOfACourse(courseNameOld, courseNameNew) {
+    if (courseList.indexOf(courseNameOld) > -1) {
+        var indexCourse_1 = courseList.indexOf(courseNameOld);
+        courseList = courseList.map(function (e, index) { return (indexCourse_1 == index) ? e = courseNameNew : e; });
+        console.log("Course list updated: \n" + JSON.stringify(courseList));
+    }
+    else
+        console.log("Course name not found!");
+}
 function assign_Grade(student, courseName, grade) {
     if (student.courseList.indexOf(courseName) > -1) {
         return {
@@ -39,7 +31,7 @@ function assign_Grade(student, courseName, grade) {
     else
         return {
             fst: false,
-            snd: __assign({}, student)
+            snd: student
         };
 }
 function register_ToCourse(courseName, school) {
@@ -52,22 +44,27 @@ function register_ToCourse(courseName, school) {
     else
         return {
             fst: false,
-            snd: __assign({}, this)
+            snd: this
         };
 }
 function remove_FromCourse(courseName, school) {
     if (courseList.indexOf(courseName) > -1) {
-        var index = courseList.indexOf(courseName);
-        console.log(courseName + " " + index + " ------- " + this.courseList);
+        var index_1 = courseList.indexOf(courseName);
+        console.log(courseName + " " + index_1 + " ------- " + this.courseList);
         return {
             fst: true,
-            snd: __assign({}, this, { courseList: this.courseList.splice(index, 1) })
+            snd: __assign({}, this, { courseList: this.courseList.filter(function (elemento, indice) {
+                    if (indice == index_1)
+                        return false;
+                    else
+                        return true;
+                }) })
         };
     }
     else
         return {
             fst: false,
-            snd: __assign({}, this)
+            snd: this
         };
 }
 function print_CourseList() {
@@ -112,7 +109,8 @@ var teacher1 = {
     surname: "Cortesi",
     age: 45,
     assignGrade: assign_Grade,
-    printGradeList: print_GradeList
+    printGradeList: print_GradeList,
+    changeTitleOfACourse: change_TitleOfACourse
 };
 //
 checkResultStudent = student1.registerToCourse("Maths I", school1);
@@ -135,4 +133,20 @@ checkResultTeacher = teacher1.assignGrade(student1, "Maths I", 50);
 console.log(" " + (checkResultTeacher.fst ? "EXAM REGISTERED" : "EXAM NOT REGISTERED") + "\n");
 student1 = checkResultTeacher.snd;
 teacher1.printGradeList(student1);
+teacher1.changeTitleOfACourse("Database Administration", "Database - Administration");
 //console.log(JSON.stringify(student1)) 
+/* let elems = [1, 2, 3, 4, 5]
+console.log(JSON.stringify(elems))
+
+elems = elems.map((e, indice )=> e + 2)
+console.log(JSON.stringify(elems)) */
+/* let elems1 = ["Fatima","Sara","Miriam"]
+console.log(JSON.stringify(elems1))
+
+let indice = elems1.indexOf("Fatima")
+
+let changeName = "Nora"
+
+elems1 = elems1.map((e,index)=> (indice == index)? e=changeName:e)
+console.log(JSON.stringify(elems1))
+ */ 

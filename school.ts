@@ -1,3 +1,5 @@
+import { Pair } from "./calcolatrice";
+
                         
 /*
  Student 1 -> 1 Libretto
@@ -44,33 +46,38 @@ type Teacher = Person & {kind:"teacher"} & TeachersOperations
 
 type Course = {courseList:string[]}
 
-type Pair1<t1, t2> = {
-    fst:t1
-    snd:t2
-  }
 
-type Pair2<t1, t2> = {
-    fst:t1
-    snd:t2
-}
+
+
 
 let courseList = ["Maths I","Maths II","Web Development", "Database Administration", "Digital Management","Computer Networking"]
 
 type StudentsOperations = {
     //courseListHistory:{courseName:string}[]
     printCourseList:(this:Student) => void
-    registerToCourse:(this:Student, courseName:string, school:School) => Pair2<boolean, Student>
-    removeCourse:(this:Student, courseName:string, school:School) => Pair2<boolean, Student>
+    registerToCourse:(this:Student, courseName:string, school:School) => Pair<boolean, Student>
+    removeCourse:(this:Student, courseName:string, school:School) => Pair<boolean, Student>
 }
 
 
 type TeachersOperations = {
-    /* changeDescriptionOfACourse:(profile:TeacherOperations,courses:string[]) => [], */
+    changeTitleOfACourse:(this:Teacher,courseNameOld:string,courseNameNew:string) => void 
     printGradeList:(student:Student) => void
-    assignGrade:(this:Teacher,student:Student ,courseName:string,grade:number) => Pair1<boolean, Student>
+    assignGrade:(this:Teacher,student:Student ,courseName:string,grade:number) => Pair<boolean, Student>
 }
 
-function assign_Grade(this:Teacher,student:Student,courseName:string,grade:number) : Pair1<boolean, Student> {
+
+function change_TitleOfACourse(this:Teacher,courseNameOld:string,courseNameNew:string) : void {
+
+    if (courseList.indexOf(courseNameOld) > -1){
+        const indexCourse = courseList.indexOf(courseNameOld)
+        courseList = courseList.map((e,index)=> (indexCourse == index)? e = courseNameNew:e)
+        console.log(`Course list updated: \n` + JSON.stringify(courseList))
+
+    }
+    else console.log("Course name not found!")
+}
+function assign_Grade(this:Teacher,student:Student,courseName:string,grade:number) : Pair<boolean, Student> {
     if (student.courseList.indexOf(courseName) > -1){
         return {
             fst:true,
@@ -80,10 +87,11 @@ function assign_Grade(this:Teacher,student:Student,courseName:string,grade:numbe
     else
         return {
             fst:false,
-            snd: {...student,}}
+            snd: student
+        }
 }
 
-function register_ToCourse(this:Student, courseName:string, school:School) : Pair2<boolean, Student> {
+function register_ToCourse(this:Student, courseName:string, school:School) : Pair<boolean, Student> {
     if (courseList.indexOf(courseName) > -1){
         return {
             fst:true,
@@ -93,22 +101,27 @@ function register_ToCourse(this:Student, courseName:string, school:School) : Pai
     else
         return {
             fst:false,
-            snd: {...this,}}
+            snd: this
+        }
 }
 
-function remove_FromCourse(this:Student, courseName:string, school:School) : Pair2<boolean, Student> {
+function remove_FromCourse(this:Student, courseName:string, school:School) : Pair<boolean, Student> {
     if (courseList.indexOf(courseName) > -1){
         const index = courseList.indexOf(courseName)
         console.log(courseName +  " " + index + " ------- " + this.courseList)
         return {
             fst:true,
             snd: {...this,
-                courseList : this.courseList.splice(index ,1),}}
+                courseList : this.courseList.filter((elemento, indice) => {
+                    if(indice == index) return false
+                    else return true
+                }) }}
     }
     else
         return {
             fst:false,
-            snd: {...this,}}
+            snd: this
+        }
 }
 
 function print_CourseList(this:Student):void{
@@ -128,8 +141,8 @@ function print_CourseList(this:Student):void{
   }
 
 
-let checkResultTeacher  : Pair1<boolean, Student>
-let checkResultStudent  : Pair2<boolean, Student>
+let checkResultTeacher  : Pair<boolean, Student>
+let checkResultStudent  : Pair<boolean, Student>
 
 
 let school1 : School = {
@@ -164,7 +177,8 @@ let teacher1 : Teacher = {
     surname:"Cortesi",
     age:45,
     assignGrade: assign_Grade,
-    printGradeList:print_GradeList
+    printGradeList:print_GradeList,
+    changeTitleOfACourse:change_TitleOfACourse
 }
 
 
@@ -191,7 +205,7 @@ student1 = checkResultStudent.snd
 
 checkResultStudent= student1.removeCourse("Maths I",school1)
 console.log(`Name:${student1.name} ID:${student1.student_id} ${checkResultStudent.fst ? "Corse Maths I REMOVED" : "Course NOT available in ${school1.school_name}" }\n`)
-student1 = checkResultStudent.snd   
+student1 = checkResultStudent.snd
 
 student1.printCourseList()
 
@@ -204,9 +218,30 @@ student1 = checkResultTeacher.snd
 
 teacher1.printGradeList(student1) 
 
-
+teacher1.changeTitleOfACourse("Database Administration","Database - Administration")
 
 
 //console.log(JSON.stringify(student1)) 
 
 
+
+
+/* let elems = [1, 2, 3, 4, 5]
+console.log(JSON.stringify(elems))
+
+elems = elems.map((e, indice )=> e + 2)
+console.log(JSON.stringify(elems)) */
+
+
+
+
+/* let elems1 = ["Fatima","Sara","Miriam"]
+console.log(JSON.stringify(elems1))
+
+let indice = elems1.indexOf("Fatima")
+
+let changeName = "Nora"
+
+elems1 = elems1.map((e,index)=> (indice == index)? e=changeName:e)
+console.log(JSON.stringify(elems1))
+ */
